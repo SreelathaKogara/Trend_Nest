@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Your Fashion, Our Passion</h1>
+    <p>Discover the latest in ethnic and traditional wear</p>
+    <a href="{% url 'product_list' %}" class="btn-primary">Shop Now</a>
+  </div>
+  <div class="hero-image">
+    <img src="{% static 'images/hero-banner.jpg' %}" alt="Hero Banner">
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories">
+  <h2>Explore Categories</h2>
+  <div class="category-list">
+    {% for category in categories %}
+      <div class="category-card">
+        {% if category.image %}
+        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+        {% else %}
+        <div class="placeholder">{{ category.name }}</div>
+        {% endif %}
+        <p>{{ category.name }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="featured">
+  <h2>Featured Picks</h2>
+  <div class="product-grid">
+    {% for product in featured_products %}
+      <div class="product-card">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        <h3>{{ product.name }}</h3>
+        <p>₹{{ product.price }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

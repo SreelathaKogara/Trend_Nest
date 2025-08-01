@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TrendNest</title>
+  {% load static %}
+<link rel="stylesheet" href="{% static 'home/home.css' %}">
+
+</head>
+<body>
+  <header>
+    <div class="logo">TrendNest</div>
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'product_list' %}">Products</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+      <a href="{% url 'cart' %}">Cart</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>© 2025 TrendNest. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
