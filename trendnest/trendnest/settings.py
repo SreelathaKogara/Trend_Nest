@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'products',
+    'orders',
+    'reviews',
 
 ]
 
@@ -48,10 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'orders',
-    'products',
-    'reviews',
-    'users',
+
 ]
 
 ROOT_URLCONF = 'trendnest.urls'
