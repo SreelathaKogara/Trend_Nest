@@ -1,17 +1,152 @@
-{% extends "base.html" %}
+{% extends "home/base.html" %}
 {% load static %}
 
 {% block content %}
-<h2 style="text-align:center;">All Products</h2>
-<div class="product-grid">
-  {% for product in products %}
-    <div class="product-card">
-      <a href="{% url 'product_detail' product.pk %}">
-        <img src="{{ product.image.url }}" alt="{{ product.name }}">
-        <h3>{{ product.name }}</h3>
-        <p>₹{{ product.price }}</p>
-      </a>
-    </div>
-  {% endfor %}
+<style>
+    /* Existing styles kept as-is... */
+
+    .offer-banner {
+        width: 100%;
+        margin: 20px 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .offers-section {
+        padding: 20px;
+    }
+
+    .offers-section h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .offers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+
+    .offer-card {
+        background: #fff5f5;
+        border: 1px solid #ffe3e3;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .offer-card strong {
+        display: block;
+        font-size: 16px;
+        margin-top: 5px;
+        color: #d32f2f;
+    }
+.banner-img {
+    width: 100%;
+    max-height: 400px; /* or adjust as needed */
+    object-fit: cover;
+}
+
+</style>
+
+<!-- ✅ Promotional Banner (insert your image into static/images/banner.jpg) -->
+<div class="offer-banner">
+    <img src="{% static 'images/banner.jpg' %}" alt="Banner" class="banner-img">
 </div>
+
+<!-- ✅ Filters and Category Tabs -->
+<div class="filter-bar">
+    <div class="category-tabs flex gap-4 overflow-x-auto">
+        <a <a href="{% url 'products:category_view' 'men' %}" class="px-4 py-2 rounded-full border hover:bg-black hover:text-white transition {% if request.GET.category == 'Men' %}bg-black text-white{% endif %}">Men</a>
+        <a href="{% url 'products:category_view' 'women' %}" class="px-4 py-2 rounded-full border hover:bg-black hover:text-white transition {% if request.GET.category == 'Women' %}bg-black text-white{% endif %}">Women</a>
+        <a href="{% url 'products:category_view' 'kids' %}" class="px-4 py-2 rounded-full border hover:bg-black hover:text-white transition {% if request.GET.category == 'Kids' %}bg-black text-white{% endif %}">Kids</a>
+    </div>
+
+    <form method="get" class="flex gap-2 mt-4 flex-wrap">
+        <input type="text" name="q" placeholder="Search products..." class="p-2 border rounded w-full md:w-auto" value="{{ request.GET.q }}">
+        <select name="price" class="p-2 border rounded">
+            <option value="">Price</option>
+            <option value="low_to_high" {% if request.GET.price == 'low_to_high' %}selected{% endif %}>Low to High</option>
+            <option value="high_to_low" {% if request.GET.price == 'high_to_low' %}selected{% endif %}>High to Low</option>
+        </select>
+        <input type="hidden" name="category" value="{{ request.GET.category }}">
+        <button type="submit" class="px-4 py-2 bg-black text-white rounded">Filter</button>
+    </form>
+</div>
+
+<!-- ✅ Product Grid -->
+<div class="product-grid">
+    {% if products %}
+        {% for product in products %}
+        <div class="product-card">
+            <a href="{% url 'products:product_detail' product.id %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </a>
+            <div class="product-info">
+                <span class="brand">{{ product.brand }}</span>
+                <h3>{{ product.name }}</h3>
+                <div class="price">
+                    {% if product.original_price > product.price %}
+                        <span class="original">₹{{ product.original_price }}</span>
+                        <span class="discounted">₹{{ product.price }}</span>
+                        {% if product.discount_percentage > 0 %}
+                            <span class="discount-badge">{{ product.discount_percentage }}% OFF</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="discounted">₹{{ product.price }}</span>
+                    {% endif %}
+                </div>
+                <form method="POST" action="{% url 'cart:add_to_cart' %}">
+    {% csrf_token %}
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <button type="submit">Add to Cart</button>
+</form>
+
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- ✅ Fallback Dummy Products -->
+        {% for i in "123456" %}
+        <div class="product-card">
+            <a href="#">
+                <img src="{% static 'images/sample-product.jpg' %}" alt="Sample Product">
+            </a>
+            <div class="product-info">
+                <span class="brand">Brand Name</span>
+                <h3>Sample Product {{ forloop.counter }}</h3>
+                <div class="price">
+                    <span class="original">₹1999</span>
+                    <span class="discounted">₹999</span>
+                    <span class="discount-badge">50% OFF</span>
+                </div>
+                <button>Add to Cart</button>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<!-- ✅ Ongoing Offers Section -->
+<div class="offers-section">
+    <h2>🔥 Top Deals</h2>
+    <div class="offers-grid">
+        <div class="offer-card">
+            Flat 60% Off<br><strong>On Men's Wear</strong>
+        </div>
+        <div class="offer-card">
+            Up to 70% Off<br><strong>On Footwear</strong>
+        </div>
+        <div class="offer-card">
+            Buy 1 Get 1<br><strong>Kids Collection</strong>
+        </div>
+        <div class="offer-card">
+            Extra ₹500 Off<br><strong>On ₹2999+</strong>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

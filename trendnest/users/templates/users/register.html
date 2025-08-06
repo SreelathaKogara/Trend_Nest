@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Register | Trendnest</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F4C2C2; /* Baby Pink */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        form button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #ff4081;
+            font-size: 18px;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        form button:hover {
+            background: #e73370;
+        }
+        .login-link {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .login-link a {
+            color: #ffd6e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .errorlist {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin: -15px 0 10px 0;
+            list-style: none;
+            padding-left: 0;
+        }
+        .messages {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .messages.success {
+            color: #a3f7bf;
+        }
+        .messages.error {
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Account</h2>
+
+        {% if messages %}
+          {% for message in messages %}
+            <p class="messages {{ message.tags }}">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {{ form.username.errors }}
+            <input type="text" name="{{ form.username.html_name }}" placeholder="Username"
+                   value="{{ form.username.value|default_if_none:'' }}" required />
+
+            {{ form.email.errors }}
+            <input type="email" name="{{ form.email.html_name }}" placeholder="Email"
+                   value="{{ form.email.value|default_if_none:'' }}" required />
+
+            {{ form.password.errors }}
+            <input type="password" name="{{ form.password.html_name }}" placeholder="Password" required />
+
+            {{ form.password2.errors }}
+            <input type="password" name="{{ form.password2.html_name }}" placeholder="Confirm Password" required />
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+    </div>
+</body>
+</html>

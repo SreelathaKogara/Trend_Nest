@@ -7,12 +7,22 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
-
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product_name = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-
+    product_name = models.CharField(max_length=200, default='Unnamed Product')
+    description = models.TextField(default='No description available')
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
+    brand = models.CharField(max_length=100, default='Generic')
+    image = models.ImageField(upload_to='products/')
+    stock = models.IntegerField(default=0)
+    is_available = models.BooleanField(default=True)
+    rating = models.FloatField(default=0.0)  # Average rating out of 5
+    available_sizes = models.CharField(
+        max_length=100,
+        default='S,M,L,XL',
+        help_text='Comma-separated list of sizes like S,M,L,XL'
+    )
     def __str__(self):
         return self.product_name
 
